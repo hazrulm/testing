@@ -1,0 +1,146 @@
+
+package bengproject;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.u
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+//import com.sun.corba.se.impl.orbutil.graph.Graph;
+
+import java.awt.*;
+import javax.swing.*; 
+import java.awt.event.*;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.List;
+
+
+/**
+ *
+ * @author Hazrul Muhammad
+ */
+public class CDMA extends JFrame {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private final JLabel label1, label2, label3;
+    private final JTextField textField1;
+    
+    //set up GUI
+    public CDMA()
+    {
+        setTitle("CDMA");
+               
+        this.setLayout(new GridLayout(3, 1));
+            
+        //container.setLayout(new FlowLayout());
+        
+        JPanel formPanel = new JPanel();
+        
+        //Construct TextField with default sizing
+        textField1 = new JTextField(1);
+        formPanel.add(textField1);
+ 
+        TextFieldHandler handler = new TextFieldHandler();
+        textField1.addActionListener((ActionListener) handler);
+                
+        //JLabel constructor with a string argument
+        label1 = new JLabel("Enter any character");
+        formPanel.add(label1);
+        
+        //label constructor with string, Icon and alignment arguments
+        label2 = new JLabel( "Binary : ?" , SwingConstants.LEFT);
+        formPanel.add(label2);
+        
+        label3 = new JLabel("Decimal Value : ?");
+        formPanel.add(label3);
+        
+       // System.out.println( binary.);
+        
+        List<Integer> dummySignal = new ArrayList<Integer>();
+        dummySignal.add(1);
+        dummySignal.add(1);
+        dummySignal.add(-1);
+        dummySignal.add(0);	
+        dummySignal.add(1);
+        dummySignal.add(-1);
+
+        GraphPanel graph = new GraphPanel();
+        graph.setInputSignal(dummySignal);
+
+        List<Integer> dummySignal2 = new ArrayList<Integer>();
+        dummySignal2.add(1);
+        dummySignal2.add(0);
+        dummySignal2.add(1);
+        dummySignal2.add(0);
+        dummySignal2.add(1);
+        dummySignal2.add(0);
+        dummySignal2.add(1);
+        dummySignal2.add(0);
+
+        GraphPanel graph2 = new GraphPanel();
+        graph2.setInputSignal(dummySignal2);
+
+        add(formPanel);
+        add(graph);
+        add(graph2);
+
+        
+        setSize(500,500);
+        setLocationRelativeTo(null);
+        
+        setVisible(true);
+              
+    }
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        CDMA application = new CDMA();
+        
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    //private inner class for event handling
+    public class TextFieldHandler implements ActionListener {
+        
+        //process text field event
+        @Override
+        public void actionPerformed(ActionEvent event)
+        {
+            String string = "";
+            byte[] bytes;
+            try {
+                bytes = string.getBytes("US-ASCII");
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(CDMA.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //user pressed Enter in JTextField textField1
+            if (event.getSource() == textField1)
+                string =  event.getActionCommand();
+                
+           System.out.println("'" + string + "' to US_ASCII: " + Arrays.toString(string.getBytes()));
+            
+            StringBuilder binary = new StringBuilder();
+            for (byte b : string.getBytes())
+            {
+               int val = b;
+               for (int i = 0; i < 8; i++)
+               {
+                  binary.append((val & 128) == 0 ? 0 : 1);
+                  val <<= 1;
+                  
+               }
+            }
+            System.out.println("'" + string + "' to binary: " + binary);
+            label3.setText("Decimal : " + Arrays.toString(string.getBytes()));
+            label2.setText("Binary : "+ String.valueOf(binary)); 
+        }
+    }
+}
+
