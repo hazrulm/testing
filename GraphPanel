@@ -1,0 +1,70 @@
+package bengproject;
+
+import java.awt.*;
+import java.util.List;
+import javax.swing.JPanel;
+
+class GraphPanel extends JPanel {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private List<Integer> inputSignal;
+    private int HEIGHT = 100;
+    private int INTERVAL = 50;
+
+    public GraphPanel() {
+        setBackground(Color.WHITE);
+        setSize(500, 100);
+    }
+
+    public void setInputSignal(List<Integer> inputSignal) {
+        this.inputSignal = inputSignal;
+    }
+
+    private void drawInputSignal(Graphics2D g2d) {
+        int x = 0;
+        int y;
+        int oldY = 0;
+
+        for(Integer i : inputSignal) {
+            y = getHeight(i);
+
+            // code for drawing vertical lines
+            if (x > 0) {
+                g2d.drawLine(x, oldY, x, y);
+            }
+
+            oldY = y;
+
+            g2d.drawLine(x, y, x + INTERVAL, y);
+
+            x += INTERVAL;
+        }
+    }
+
+    private int getHeight(int value) {
+        switch(value) {
+            case 1:
+                return HEIGHT;
+            case 0:
+                return HEIGHT/2;
+            case -1:
+                return 0;
+        }
+
+        throw new RuntimeException("Invalid value");
+    }
+
+    private void doDrawing(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+
+        drawInputSignal(g2d);
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        doDrawing(g);
+    }
+}
